@@ -1,0 +1,53 @@
+
+### cadastra empresa JSON
+POST http://localhost:8000/empresas
+Content-Type: application/json
+
+{
+  "descricao": "MC SISTEMAS",
+  "cnpj": "03304884000166",
+  "chave_registro": "00000000022222222"
+}
+
+### busca empresas
+GET http://localhost:8000/empresas
+Content-Type: application/json
+
+
+### Get empresa pelo ID
+GET http://localhost:8000/empresas/0dc4f203-c2bd-4629-9fa5-e8a73525dc62
+Content-Type: application/json
+
+
+### Get empresa pelo CNPJ
+GET http://localhost:8000/empresas/cnpj/01831176000239
+Content-Type: application/json
+
+
+### Get empresa pela CHAVE
+GET http://localhost:8000/empresas/chave/114719062017110014
+Content-Type: application/json
+
+
+### Update empresa pelo ID
+PUT  http://localhost:8000/empresas/0dc4f203-c2bd-4629-9fa5-e8a73525dc62
+Content-Type: application/json
+
+{
+  "descricao": "MC ALTERADO",
+  "cnpj": "03304884000166",
+  "chave_registro": "114719062017110014"
+}
+
+### Delete empresa pelo ID
+DELETE http://localhost:8000/empresas/9eb13f44-9bab-4046-85a1-fc74f86956f9
+Content-Type: application/json
+
+
+
+### cadastra produto kafka
+{"name": "My Product KAFKA", "price": 9999.99}
+
+### cadastra empresa kafka
+{"name": "My Empresa KAFKA", "chave": "000130121899000000"}
+
