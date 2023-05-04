@@ -10,3 +10,7 @@ type VendaOutputDTO struct {
 	Total     float64   `json:"total"`
 	Data      time.Time `json:"data"`
 }
+
+type VendasOutputDTO struct {
+	Vendas VendaOutputDTO `json:"vendas"`
+}

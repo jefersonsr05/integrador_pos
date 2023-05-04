@@ -7,3 +7,7 @@ type MaquininhaPosOutputDTO struct {
 	Administradora string `json:"administradora"`
 	Cnpj           string `json:"cnpj"`
 }
+
+type MaquininhasPosOutputDTO struct {
+	Maquininhas MaquininhaPosOutputDTO `json:"maquininhas"`
+}

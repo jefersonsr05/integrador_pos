@@ -22,6 +22,7 @@ func (r *ProdutoRepositoryMysql) Create(produto *entity.Produto) error {
 
 	err := queries.CreateProduto(ctx, database.CreateProdutoParams{
 		ID:        produto.ID,
+		EmpresaID: produto.EmpresaID,
 		CodigoMc:  produto.CodigoMc,
 		Descricao: produto.Descricao,
 		CodBarras: sql.NullString{String: produto.CodBarras, Valid: true},
@@ -52,6 +53,7 @@ func (r *ProdutoRepositoryMysql) FindAll() ([]*entity.Produto, error) {
 	for _, produto := range listaProduto {
 		var newProduto entity.Produto
 		newProduto.ID = produto.ID
+		newProduto.EmpresaID = produto.EmpresaID
 		newProduto.CodigoMc = produto.CodigoMc
 		newProduto.Descricao = produto.Descricao
 		newProduto.CodBarras = produto.CodigoMc
@@ -70,6 +72,7 @@ func (r *ProdutoRepositoryMysql) Update(produto *entity.Produto) error {
 
 	err := queries.UpdateProduto(ctx, database.UpdateProdutoParams{
 		ID:        produto.ID,
+		EmpresaID: produto.EmpresaID,
 		CodigoMc:  produto.CodigoMc,
 		Descricao: produto.Descricao,
 		CodBarras: sql.NullString{String: produto.CodBarras, Valid: true},
@@ -100,6 +103,7 @@ func (r *ProdutoRepositoryMysql) GetProdutoByID(id string) (*entity.Produto, err
 
 	var newProduto entity.Produto
 	newProduto.ID = produto.ID
+	newProduto.EmpresaID = produto.EmpresaID
 	newProduto.CodigoMc = produto.CodigoMc
 	newProduto.Descricao = produto.Descricao
 	newProduto.CodBarras = produto.CodigoMc
@@ -124,6 +128,7 @@ func (r *ProdutoRepositoryMysql) GetProdutoByCodBarras(codbarras sql.NullString)
 	}
 
 	var newProduto entity.Produto
+	newProduto.EmpresaID = produto.EmpresaID
 	newProduto.ID = produto.ID
 	newProduto.CodigoMc = produto.CodigoMc
 	newProduto.Descricao = produto.Descricao
@@ -150,6 +155,7 @@ func (r *ProdutoRepositoryMysql) GetProdutoByCodigoMC(codigomc string) (*entity.
 
 	var newProduto entity.Produto
 	newProduto.ID = produto.ID
+	newProduto.EmpresaID = produto.EmpresaID
 	newProduto.CodigoMc = produto.CodigoMc
 	newProduto.Descricao = produto.Descricao
 	newProduto.CodBarras = produto.CodigoMc
@@ -175,6 +181,7 @@ func (r *ProdutoRepositoryMysql) GetProdutoByEmpresa(empresa string) ([]*entity.
 	for _, produto := range listaProduto {
 		var newProduto entity.Produto
 		newProduto.ID = produto.ID
+		newProduto.EmpresaID = produto.EmpresaID
 		newProduto.CodigoMc = produto.CodigoMc
 		newProduto.Descricao = produto.Descricao
 		newProduto.CodBarras = produto.CodigoMc

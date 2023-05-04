@@ -11,3 +11,7 @@ type ClienteOutputDTO struct {
 	Numero      string `json:"numero"`
 	Complemento string `json:"complemento"`
 }
+
+type ClientesOutputDTO struct {
+	Clientes []ClienteOutputDTO `json:"clientes"`
+}

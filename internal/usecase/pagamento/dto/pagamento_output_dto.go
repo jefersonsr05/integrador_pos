@@ -9,3 +9,7 @@ type PagamentoOutputDTO struct {
 	PosExclusivo bool   `json:"pos_exclusivo"`
 	IDPos        string `json:"id_pos"`
 }
+
+type PagamentosOutputDTO struct {
+	Pagamentos PagamentoOutputDTO `json:"pagamentos"`
+}

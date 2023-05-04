@@ -6,14 +6,10 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/jefersonsr05/integrador_pos/internal/infra/db"
 	api_routes "github.com/jefersonsr05/integrador_pos/internal/routes"
 )
 
 func main() {
-
-	dbConn, _ := db.Conectar()
-	defer dbConn.Close()
 
 	log.Printf("iniciando serviços")
 

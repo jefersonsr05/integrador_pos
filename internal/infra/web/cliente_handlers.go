@@ -4,26 +4,39 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
-	usecase "github.com/jefersonsr05/integrador_pos/internal/usecase/cliente"
+	"github.com/jefersonsr05/integrador_pos/internal/infra/db"
+	"github.com/jefersonsr05/integrador_pos/internal/infra/repository"
+	usecase_cliente "github.com/jefersonsr05/integrador_pos/internal/usecase/cliente"
 	clientedto "github.com/jefersonsr05/integrador_pos/internal/usecase/cliente/dto"
 )
 
 type ClienteHandlers struct {
-	CreateClienteUseCase *usecase.CreateClienteUseCase
-	ListClienteUseCase   *usecase.ListClienteUseCase
-	DeleteClienteUseCase *usecase.DeleteClienteUseCase
-	GetClienteUseCase    *usecase.GetClienteUseCase
-	UpdateClienteUseCase *usecase.UpdateClienteUseCase
+	CreateClienteUseCase *usecase_cliente.CreateClienteUseCase
+	ListClienteUseCase   *usecase_cliente.ListClienteUseCase
+	DeleteClienteUseCase *usecase_cliente.DeleteClienteUseCase
+	GetClienteUseCase    *usecase_cliente.GetClienteUseCase
+	UpdateClienteUseCase *usecase_cliente.UpdateClienteUseCase
 }
 
 func NewClienteHandlers(
-	createClienteUseCase *usecase.CreateClienteUseCase,
-	listClienteUseCase *usecase.ListClienteUseCase,
-	deleteClienteUseCase *usecase.DeleteClienteUseCase,
-	getClienteUseCase *usecase.GetClienteUseCase,
-	updateClienteUseCase *usecase.UpdateClienteUseCase) *ClienteHandlers {
+// createClienteUseCase *usecase.CreateClienteUseCase,
+// listClienteUseCase *usecase.ListClienteUseCase,
+// deleteClienteUseCase *usecase.DeleteClienteUseCase,
+// getClienteUseCase *usecase.GetClienteUseCase,
+// updateClienteUseCase *usecase.UpdateClienteUseCase
+) *ClienteHandlers {
+	dbConn, _ := db.Conectar()
+
+	repositoryCliente := repository.NewClienteRepositoryMysql(dbConn)
+	createClienteUseCase := usecase_cliente.NewCreateClienteUseCase(repositoryCliente)
+	listClienteUseCase := usecase_cliente.NewListClienteUseCase(repositoryCliente)
+	getClienteUseCase := usecase_cliente.NewGetClienteUseCase(repositoryCliente)
+	deleteClienteUseCase := usecase_cliente.NewDeleteClienteUseCase(repositoryCliente)
+	updateClienteUseCase := usecase_cliente.NewUpdateClienteUseCase(repositoryCliente)
+
 	return &ClienteHandlers{
 		CreateClienteUseCase: createClienteUseCase,
 		ListClienteUseCase:   listClienteUseCase,
@@ -35,8 +48,8 @@ func NewClienteHandlers(
 func (p *ClienteHandlers) UpdateClienteHandler(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	if id == "" {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
 	}
 	_, err := p.GetClienteUseCase.GetClienteByID(id)
 	if err != nil {
@@ -49,8 +62,9 @@ func (p *ClienteHandlers) UpdateClienteHandler(w http.ResponseWriter, r *http.Re
 	var input clientedto.ClienteInputDTO
 	err = json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
+		json.NewEncoder(w).Encode(err)
 	}
 	output, err := p.UpdateClienteUseCase.Execute(id, input)
 	if err != nil {
@@ -67,8 +81,9 @@ func (p *ClienteHandlers) CreateClienteHandler(w http.ResponseWriter, r *http.Re
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
 		log.Printf("Erro Create UseCase" + err.Error())
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
+		json.NewEncoder(w).Encode(err)
 	}
 	output, err := p.CreateClienteUseCase.Execute(input)
 	if err != nil {
@@ -94,8 +109,8 @@ func (p *ClienteHandlers) ListClienteHandler(w http.ResponseWriter, r *http.Requ
 func (p *ClienteHandlers) DeleteClienteHandler(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	if id == "" {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
 	}
 	_, err := p.GetClienteUseCase.GetClienteByID(id)
 	if err != nil {
@@ -117,7 +132,6 @@ func (p *ClienteHandlers) GetClienteHandler(w http.ResponseWriter, r *http.Reque
 
 	var id string
 	var empresa string
-	// var codigomc string
 
 	if chi.URLParam(r, "id") != "" {
 		id = chi.URLParam(r, "id")
@@ -147,24 +161,25 @@ func (p *ClienteHandlers) GetClienteHandler(w http.ResponseWriter, r *http.Reque
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(output)
-		// } else if chi.URLParam(r, "codigomc") != "" {
-		// 	codigomc = chi.URLParam(r, "codigomc")
-		// 	//log.Printf("parametros codigomc:" + chi.URLParam(r, "codigomc"))
+	} else if chi.URLParam(r, "codigomc") != "" {
+		codigomc, _ := strconv.ParseInt(chi.URLParam(r, "codigomc"), 10, 32)
 
-		// 	output, err := p.GetClienteUseCase.GetClienteByCodigoMC(codigomc)
-		// 	if err != nil {
-		// 		w.Header().Set("Content-Type", "application/json")
-		// 		w.WriteHeader(http.StatusNotFound)
-		// 		json.NewEncoder(w).Encode(err)
-		// 		return
-		// 	}
-		// 	w.Header().Set("Content-Type", "application/json")
-		// 	w.WriteHeader(http.StatusOK)
-		// 	json.NewEncoder(w).Encode(output)
-		// }
+		//log.Printf("parametros codigomc:" + chi.URLParam(r, "codigomc"))
+
+		output, err := p.GetClienteUseCase.GetClienteByCodigoMC(codigomc)
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(err)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(output)
 	} else {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
+		json.NewEncoder(w).Encode("opção inválida")
 	}
 
 }

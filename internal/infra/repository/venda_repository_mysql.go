@@ -44,6 +44,7 @@ func (r *VendaRepositoryMysql) FindAll() ([]*entity.Venda, error) {
 
 	listaVenda, err := queries.ListVendas(ctx)
 	if err != nil {
+		// log.Printf(err.Error())
 		return nil, err
 	}
 

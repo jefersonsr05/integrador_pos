@@ -6,3 +6,7 @@ type CidadeOutputDTO struct {
 	EstadoID  string `json:"estado_id"`
 	CodIbge   string `json:"codigo_ibge"`
 }
+
+type CidadesOutputDTO struct {
+	Cidades []*CidadeOutputDTO `json:"cidades"`
+}

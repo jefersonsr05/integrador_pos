@@ -32,23 +32,23 @@ func (u *GetClienteUseCase) GetClienteByID(id string) (*clientedto.ClienteOutput
 	}, nil
 }
 
-// func (u *GetClienteUseCase) GetClienteByCodigoMC(codigomc string) (*clientedto.ClienteOutputDTO, error) {
-// 	cliente, err := u.ClienteRepository.GetClienteByCodigoMC(codigomc)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return &clientedto.ClienteOutputDTO{
-// 		ID:          cliente.ID,
-// 		EmpresaID:   cliente.EmpresaID,
-// 		CodigoMc:    cliente.CodigoMc,
-// 		Nome:        cliente.Nome,
-// 		Cep:         cliente.Cep,
-// 		CidadeID:    cliente.CidadeID,
-// 		Endereco:    cliente.Endereco,
-// 		Numero:      cliente.Numero,
-// 		Complemento: cliente.Complemento,
-// 	}, nil
-// }
+func (u *GetClienteUseCase) GetClienteByCodigoMC(codigomc int64) (*clientedto.ClienteOutputDTO, error) {
+	cliente, err := u.ClienteRepository.GetClienteByCodigoMC(codigomc)
+	if err != nil {
+		return nil, err
+	}
+	return &clientedto.ClienteOutputDTO{
+		ID:          cliente.ID,
+		EmpresaID:   cliente.EmpresaID,
+		CodigoMc:    cliente.CodigoMc,
+		Nome:        cliente.Nome,
+		Cep:         cliente.Cep,
+		CidadeID:    cliente.CidadeID,
+		Endereco:    cliente.Endereco,
+		Numero:      cliente.Numero,
+		Complemento: cliente.Complemento,
+	}, nil
+}
 
 func (u *GetClienteUseCase) GetClienteByEmpresa(empresa string) ([]*clientedto.ClienteOutputDTO, error) {
 	clientes, err := u.ClienteRepository.GetClienteByEmpresa(empresa)

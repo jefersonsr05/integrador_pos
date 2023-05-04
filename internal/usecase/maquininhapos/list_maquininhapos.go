@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"log"
+
 	"github.com/jefersonsr05/integrador_pos/internal/entity"
 	maquininhaposdto "github.com/jefersonsr05/integrador_pos/internal/usecase/maquininhapos/dto"
 )
@@ -17,6 +19,7 @@ func NewListMaquininhaPosUseCase(maquininhaPosRepository entity.MaquininhaPosRep
 func (u *ListMaquininhaPosUseCase) Execute() ([]*maquininhaposdto.MaquininhaPosOutputDTO, error) {
 	maquininhaspos, err := u.MaquininhaPosRepository.FindAll()
 	if err != nil {
+		log.Printf("Erro maquininha" + err.Error())
 		return nil, err
 	}
 

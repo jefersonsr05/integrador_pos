@@ -36,7 +36,7 @@ func (r *EstadoRepositoryMysql) Create(estado *entity.Estado) error {
 
 func (r *EstadoRepositoryMysql) FindAll() ([]*entity.Estado, error) {
 	ctx := context.Background()
-
+	// log.Printf(fmt.Sprint(r.DB.Stats().OpenConnections, r.DB.Stats().InUse, r.DB.Stats().Idle, r.DB.Stats().MaxOpenConnections))
 	queries := database.New(r.DB)
 
 	listaEstado, err := queries.ListEstados(ctx)
@@ -58,6 +58,7 @@ func (r *EstadoRepositoryMysql) FindAll() ([]*entity.Estado, error) {
 
 func (r *EstadoRepositoryMysql) Update(estado *entity.Estado) error {
 	ctx := context.Background()
+	// log.Printf(fmt.Sprint(r.DB.Stats().OpenConnections, r.DB.Stats().InUse, r.DB.Stats().Idle, r.DB.Stats().MaxOpenConnections))
 	queries := database.New(r.DB)
 
 	err := queries.UpdateEstado(ctx, database.UpdateEstadoParams{
@@ -76,7 +77,7 @@ func (r *EstadoRepositoryMysql) Update(estado *entity.Estado) error {
 
 func (r *EstadoRepositoryMysql) GetEstadoByID(id string) (*entity.Estado, error) {
 	ctx := context.Background()
-
+	// log.Printf(fmt.Sprint(r.DB.Stats().OpenConnections, r.DB.Stats().InUse, r.DB.Stats().Idle, r.DB.Stats().MaxOpenConnections))
 	queries := database.New(r.DB)
 
 	// log.Printf("passei aqui com o ID: " + id)
@@ -97,7 +98,7 @@ func (r *EstadoRepositoryMysql) GetEstadoByID(id string) (*entity.Estado, error)
 
 func (r *EstadoRepositoryMysql) GetEstadoByCodIBGE(ibge int32) (*entity.Estado, error) {
 	ctx := context.Background()
-
+	// log.Printf(fmt.Sprint(r.DB.Stats().OpenConnections, r.DB.Stats().InUse, r.DB.Stats().Idle, r.DB.Stats().MaxOpenConnections))
 	queries := database.New(r.DB)
 
 	estado, err := queries.GetEstadoByCodIBGE(ctx, ibge)
@@ -116,7 +117,7 @@ func (r *EstadoRepositoryMysql) GetEstadoByCodIBGE(ibge int32) (*entity.Estado, 
 
 func (r *EstadoRepositoryMysql) GetEstadoByUF(uf string) (*entity.Estado, error) {
 	ctx := context.Background()
-
+	// log.Printf(fmt.Sprint(r.DB.Stats().OpenConnections, r.DB.Stats().InUse, r.DB.Stats().Idle, r.DB.Stats().MaxOpenConnections))
 	queries := database.New(r.DB)
 
 	estado, err := queries.GetEstadoByUF(ctx, uf)

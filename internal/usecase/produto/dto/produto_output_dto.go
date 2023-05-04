@@ -11,3 +11,7 @@ type ProdutoOutputDTO struct {
 	Cbenef    string  `json:"cbenef"`
 	Preco     float64 `json:"preco"`
 }
+
+type ProdutosOutputDTO struct {
+	Produtos ProdutoOutputDTO `joson:"produtos"`
+}

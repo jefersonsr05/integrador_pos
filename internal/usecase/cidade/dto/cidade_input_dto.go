@@ -5,3 +5,7 @@ type CidadeInputDTO struct {
 	EstadoID  string `json:"estado_id"`
 	CodIbge   string `json:"codigo_ibge"`
 }
+
+type CidadesInputDTO struct {
+	Cidades []CidadeInputDTO `json:"cidades"`
+}

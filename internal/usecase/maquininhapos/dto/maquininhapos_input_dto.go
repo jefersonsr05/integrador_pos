@@ -6,3 +6,7 @@ type MaquininhaPosInputDTO struct {
 	Administradora string `json:"administradora"`
 	Cnpj           string `json:"cnpj"`
 }
+
+type MaquininhasPosInputDTO struct {
+	MaquininhaPOS MaquininhaPosInputDTO `json:"maquininhas"`
+}

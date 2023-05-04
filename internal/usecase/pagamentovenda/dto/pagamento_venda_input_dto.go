@@ -10,3 +10,7 @@ type PagamentoVendaInputDTO struct {
 	Vencimento  time.Time `json:"vencimento"`
 	Status      bool      `json:"status"`
 }
+
+type PagamentosVendaInputDTO struct {
+	PagamentosVenda PagamentoVendaInputDTO `json:"pagamentos_venda"`
+}

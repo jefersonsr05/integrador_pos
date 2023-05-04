@@ -22,7 +22,7 @@ func Conectar() (*sql.DB, error) {
 	dbName := os.Getenv("MYSQL_DATABASE")
 
 	// Conexão com o banco de dados
-	dbConn, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPass, dbHost, dbPort, dbName))
+	dbConn, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", dbUser, dbPass, dbHost, dbPort, dbName))
 	if err != nil {
 		log.Fatal(err)
 	}

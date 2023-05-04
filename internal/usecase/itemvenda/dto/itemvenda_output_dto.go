@@ -9,3 +9,7 @@ type ItemVendaOutputDTO struct {
 	Valor      float64 `json:"valor"`
 	Total      float64 `json:"total"`
 }
+
+type ItensOutputDTO struct {
+	ItensVenda ItemVendaOutputDTO `json:"itens_venda"`
+}

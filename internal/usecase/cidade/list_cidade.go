@@ -14,7 +14,25 @@ func NewListCidadeUseCase(cidadeRepository entity.CidadeRepository) *ListCidadeU
 
 }
 
-func (u *ListCidadeUseCase) Execute() ([]*cidadedto.CidadeOutputDTO, error) {
+// func (u *ListCidadeUseCase) Execute() ([]*cidadedto.CidadeOutputDTO, error) {
+// 	cidades, err := u.CidadeRepository.FindAll()
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	var cidadesOutput []*cidadedto.CidadeOutputDTO
+// 	for _, cidade := range cidades {
+// 		cidadesOutput = append(cidadesOutput, &cidadedto.CidadeOutputDTO{
+// 			ID:        cidade.ID,
+// 			Descricao: cidade.Descricao,
+// 			EstadoID:  cidade.EstadoID,
+// 			CodIbge:   cidade.CodIbge,
+// 		})
+// 	}
+// 	return cidadesOutput, nil
+// }
+
+func (u *ListCidadeUseCase) Execute() ([]*cidadedto.CidadesOutputDTO, error) {
 	cidades, err := u.CidadeRepository.FindAll()
 	if err != nil {
 		return nil, err
@@ -29,5 +47,10 @@ func (u *ListCidadeUseCase) Execute() ([]*cidadedto.CidadeOutputDTO, error) {
 			CodIbge:   cidade.CodIbge,
 		})
 	}
-	return cidadesOutput, nil
+
+	output := cidadedto.CidadesOutputDTO{
+		Cidades: cidadesOutput,
+	}
+
+	return []*cidadedto.CidadesOutputDTO{&output}, nil
 }

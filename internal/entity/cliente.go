@@ -7,7 +7,7 @@ type ClienteRepository interface {
 	Update(cliente *Cliente) error
 	GetClienteByID(id string) (*Cliente, error)
 	GetClienteByEmpresa(empresaid string) ([]*Cliente, error)
-	// GetClienteByCodigoMC(codigomc string) (*Cliente, error)
+	GetClienteByCodigoMC(codigomc int64) (*Cliente, error)
 	FindAll() ([]*Cliente, error)
 	Delete(id string) error
 }

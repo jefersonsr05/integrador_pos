@@ -5,24 +5,36 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	usecase "github.com/jefersonsr05/integrador_pos/internal/usecase/itemvenda"
+	"github.com/jefersonsr05/integrador_pos/internal/infra/db"
+	"github.com/jefersonsr05/integrador_pos/internal/infra/repository"
+	usecase_itemvenda "github.com/jefersonsr05/integrador_pos/internal/usecase/itemvenda"
 	itemvendadto "github.com/jefersonsr05/integrador_pos/internal/usecase/itemvenda/dto"
 )
 
 type ItemVendaHandlers struct {
-	CreateItemVendaUseCase *usecase.CreateItemVendaUseCase
-	ListItemVendaUseCase   *usecase.ListItemVendaUseCase
-	DeleteItemVendaUseCase *usecase.DeleteItemVendaUseCase
-	GetItemVendaUseCase    *usecase.GetItemVendaUseCase
-	UpdateItemVendaUseCase *usecase.UpdateItemVendaUseCase
+	CreateItemVendaUseCase *usecase_itemvenda.CreateItemVendaUseCase
+	ListItemVendaUseCase   *usecase_itemvenda.ListItemVendaUseCase
+	DeleteItemVendaUseCase *usecase_itemvenda.DeleteItemVendaUseCase
+	GetItemVendaUseCase    *usecase_itemvenda.GetItemVendaUseCase
+	UpdateItemVendaUseCase *usecase_itemvenda.UpdateItemVendaUseCase
 }
 
 func NewItemVendaHandlers(
-	createItemVendaUseCase *usecase.CreateItemVendaUseCase,
-	listItemVendaUseCase *usecase.ListItemVendaUseCase,
-	deleteItemVendaUseCase *usecase.DeleteItemVendaUseCase,
-	getItemVendaUseCase *usecase.GetItemVendaUseCase,
-	updateItemVendaUseCase *usecase.UpdateItemVendaUseCase) *ItemVendaHandlers {
+// createItemVendaUseCase *usecase.CreateItemVendaUseCase,
+// listItemVendaUseCase *usecase.ListItemVendaUseCase,
+// deleteItemVendaUseCase *usecase.DeleteItemVendaUseCase,
+// getItemVendaUseCase *usecase.GetItemVendaUseCase,
+// updateItemVendaUseCase *usecase.UpdateItemVendaUseCase
+) *ItemVendaHandlers {
+	dbConn, _ := db.Conectar()
+
+	repositoryItemVenda := repository.NewItemVendaRepositoryMysql(dbConn)
+	createItemVendaUseCase := usecase_itemvenda.NewCreateItemVendaUseCase(repositoryItemVenda)
+	listItemVendaUseCase := usecase_itemvenda.NewListItemVendaUseCase(repositoryItemVenda)
+	getItemVendaUseCase := usecase_itemvenda.NewGetItemVendaUseCase(repositoryItemVenda)
+	deleteItemVendaUseCase := usecase_itemvenda.NewDeleteItemVendaUseCase(repositoryItemVenda)
+	updateItemVendaUseCase := usecase_itemvenda.NewUpdateItemVendaUseCase(repositoryItemVenda)
+
 	return &ItemVendaHandlers{
 		CreateItemVendaUseCase: createItemVendaUseCase,
 		ListItemVendaUseCase:   listItemVendaUseCase,
@@ -34,8 +46,8 @@ func NewItemVendaHandlers(
 func (p *ItemVendaHandlers) UpdateItemVendaHandler(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	if id == "" {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
 	}
 	_, err := p.GetItemVendaUseCase.GetItemVendaByID(id)
 	if err != nil {
@@ -48,8 +60,9 @@ func (p *ItemVendaHandlers) UpdateItemVendaHandler(w http.ResponseWriter, r *htt
 	var input itemvendadto.ItemVendaInputDTO
 	err = json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
+		json.NewEncoder(w).Encode(err)
 	}
 	output, err := p.UpdateItemVendaUseCase.Execute(id, input)
 	if err != nil {
@@ -65,8 +78,9 @@ func (p *ItemVendaHandlers) CreateItemVendaHandler(w http.ResponseWriter, r *htt
 	var input itemvendadto.ItemVendaInputDTO
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
+		json.NewEncoder(w).Encode(err)
 	}
 	output, err := p.CreateItemVendaUseCase.Execute(input)
 	if err != nil {
@@ -94,8 +108,8 @@ func (p *ItemVendaHandlers) ListItemVendaHandler(w http.ResponseWriter, r *http.
 func (p *ItemVendaHandlers) DeleteItemVendaHandler(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	if id == "" {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
 	}
 	_, err := p.GetItemVendaUseCase.GetItemVendaByID(id)
 	if err != nil {
@@ -147,8 +161,9 @@ func (p *ItemVendaHandlers) GetItemVendaHandler(w http.ResponseWriter, r *http.R
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(output)
 	} else {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
+		json.NewEncoder(w).Encode("opção inválida")
 	}
 
 }

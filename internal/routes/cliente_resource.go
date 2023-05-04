@@ -4,28 +4,14 @@ import (
 	"log"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/jefersonsr05/integrador_pos/internal/infra/db"
-	"github.com/jefersonsr05/integrador_pos/internal/infra/repository"
 	"github.com/jefersonsr05/integrador_pos/internal/infra/web"
-	usecase_cliente "github.com/jefersonsr05/integrador_pos/internal/usecase/cliente"
 )
 
 func RouterCliente(r chi.Router) {
-	dbConn, _ := db.Conectar()
 
 	log.Printf("iniciando rotas de CLIENTE")
-	repositoryCliente := repository.NewClienteRepositoryMysql(dbConn)
-	createClienteUsecase := usecase_cliente.NewCreateClienteUseCase(repositoryCliente)
-	listClientesUsecase := usecase_cliente.NewListClienteUseCase(repositoryCliente)
-	getClienteUseCase := usecase_cliente.NewGetClienteUseCase(repositoryCliente)
-	deleteClienteUseCase := usecase_cliente.NewDeleteClienteUseCase(repositoryCliente)
-	updateClienteUseCase := usecase_cliente.NewUpdateClienteUseCase(repositoryCliente)
-	clienteHandlers := web.NewClienteHandlers(
-		createClienteUsecase,
-		listClientesUsecase,
-		deleteClienteUseCase,
-		getClienteUseCase,
-		updateClienteUseCase)
+
+	clienteHandlers := web.NewClienteHandlers()
 
 	r.Post("/", clienteHandlers.CreateClienteHandler)
 	r.Get("/", clienteHandlers.ListClienteHandler)

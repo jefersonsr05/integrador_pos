@@ -5,24 +5,36 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	usecase "github.com/jefersonsr05/integrador_pos/internal/usecase/empresa"
+	"github.com/jefersonsr05/integrador_pos/internal/infra/db"
+	"github.com/jefersonsr05/integrador_pos/internal/infra/repository"
+	usecase_empresa "github.com/jefersonsr05/integrador_pos/internal/usecase/empresa"
 	empresadto "github.com/jefersonsr05/integrador_pos/internal/usecase/empresa/dto"
 )
 
 type EmpresaHandlers struct {
-	CreateEmpresaUseCase *usecase.CreateEmpresaUseCase
-	ListEmpresasUseCase  *usecase.ListEmpresasUseCase
-	DeleteEmpresaUseCase *usecase.DeleteEmpresaUseCase
-	GetEmpresaUseCase    *usecase.GetEmpresaUseCase
-	UpdateEmpresaUseCase *usecase.UpdateEmpresaUseCase
+	CreateEmpresaUseCase *usecase_empresa.CreateEmpresaUseCase
+	ListEmpresasUseCase  *usecase_empresa.ListEmpresasUseCase
+	DeleteEmpresaUseCase *usecase_empresa.DeleteEmpresaUseCase
+	GetEmpresaUseCase    *usecase_empresa.GetEmpresaUseCase
+	UpdateEmpresaUseCase *usecase_empresa.UpdateEmpresaUseCase
 }
 
 func NewEmpresaHandlers(
-	createEmpresaUseCase *usecase.CreateEmpresaUseCase,
-	listEmpresasUseCase *usecase.ListEmpresasUseCase,
-	deleteEmpresaUseCase *usecase.DeleteEmpresaUseCase,
-	getEmpresaUseCase *usecase.GetEmpresaUseCase,
-	updateEmpresaUseCase *usecase.UpdateEmpresaUseCase) *EmpresaHandlers {
+// createEmpresaUseCase *usecase.CreateEmpresaUseCase,
+// listEmpresasUseCase *usecase.ListEmpresasUseCase,
+// deleteEmpresaUseCase *usecase.DeleteEmpresaUseCase,
+// getEmpresaUseCase *usecase.GetEmpresaUseCase,
+// updateEmpresaUseCase *usecase.UpdateEmpresaUseCase
+) *EmpresaHandlers {
+	dbConn, _ := db.Conectar()
+
+	repositoryEmpresa := repository.NewEmpresaRepositoryMysql(dbConn)
+	createEmpresaUseCase := usecase_empresa.NewCreateEmpresaUseCase(repositoryEmpresa)
+	listEmpresasUseCase := usecase_empresa.NewListEmpresasUseCase(repositoryEmpresa)
+	getEmpresaUseCase := usecase_empresa.NewGetEmpresaUseCase(repositoryEmpresa)
+	deleteEmpresaUseCase := usecase_empresa.NewDeleteEmpresaUseCase(repositoryEmpresa)
+	updateEmpresaUseCase := usecase_empresa.NewUpdateEmpresaUseCase(repositoryEmpresa)
+
 	return &EmpresaHandlers{
 		CreateEmpresaUseCase: createEmpresaUseCase,
 		ListEmpresasUseCase:  listEmpresasUseCase,
@@ -35,7 +47,6 @@ func (p *EmpresaHandlers) UpdateEmpresaHandler(w http.ResponseWriter, r *http.Re
 	id := chi.URLParam(r, "id")
 	if id == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		return
 	}
 	_, err := p.GetEmpresaUseCase.GetEmpresaByID(id)
 	if err != nil {
@@ -48,8 +59,9 @@ func (p *EmpresaHandlers) UpdateEmpresaHandler(w http.ResponseWriter, r *http.Re
 	var input empresadto.EmpresaInputDTO
 	err = json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
+		json.NewEncoder(w).Encode(err)
 	}
 	output, err := p.UpdateEmpresaUseCase.Execute(id, input)
 	if err != nil {
@@ -65,8 +77,9 @@ func (p *EmpresaHandlers) CreateEmpresaHandler(w http.ResponseWriter, r *http.Re
 	var input empresadto.EmpresaInputDTO
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
+		json.NewEncoder(w).Encode(err)
 	}
 	output, err := p.CreateEmpresaUseCase.Execute(input)
 	if err != nil {
@@ -93,7 +106,6 @@ func (p *EmpresaHandlers) DeleteEmpresaHandler(w http.ResponseWriter, r *http.Re
 	id := chi.URLParam(r, "id")
 	if id == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		return
 	}
 	_, err := p.GetEmpresaUseCase.GetEmpresaByID(id)
 	if err != nil {
@@ -160,7 +172,6 @@ func (p *EmpresaHandlers) GetEmpresaHandler(w http.ResponseWriter, r *http.Reque
 		json.NewEncoder(w).Encode(output)
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
-		return
 	}
 
 }

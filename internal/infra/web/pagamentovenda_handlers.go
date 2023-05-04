@@ -6,24 +6,36 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
-	usecase "github.com/jefersonsr05/integrador_pos/internal/usecase/pagamentovenda"
+	"github.com/jefersonsr05/integrador_pos/internal/infra/db"
+	"github.com/jefersonsr05/integrador_pos/internal/infra/repository"
+	usecase_pagamentovenda "github.com/jefersonsr05/integrador_pos/internal/usecase/pagamentovenda"
 	pagamentovendadto "github.com/jefersonsr05/integrador_pos/internal/usecase/pagamentovenda/dto"
 )
 
 type PagamentoVendaHandlers struct {
-	CreatePagamentoVendaUseCase *usecase.CreatePagamentoVendaUseCase
-	ListPagamentoVendaUseCase   *usecase.ListPagamentoVendaUseCase
-	DeletePagamentoVendaUseCase *usecase.DeletePagamentoVendaUseCase
-	GetPagamentoVendaUseCase    *usecase.GetPagamentoVendaUseCase
-	UpdatePagamentoVendaUseCase *usecase.UpdatePagamentoVendaUseCase
+	CreatePagamentoVendaUseCase *usecase_pagamentovenda.CreatePagamentoVendaUseCase
+	ListPagamentoVendaUseCase   *usecase_pagamentovenda.ListPagamentoVendaUseCase
+	DeletePagamentoVendaUseCase *usecase_pagamentovenda.DeletePagamentoVendaUseCase
+	GetPagamentoVendaUseCase    *usecase_pagamentovenda.GetPagamentoVendaUseCase
+	UpdatePagamentoVendaUseCase *usecase_pagamentovenda.UpdatePagamentoVendaUseCase
 }
 
 func NewPagamentoVendaHandlers(
-	createPagamentoVendaUseCase *usecase.CreatePagamentoVendaUseCase,
-	listPagamentoVendaUseCase *usecase.ListPagamentoVendaUseCase,
-	deletePagamentoVendaUseCase *usecase.DeletePagamentoVendaUseCase,
-	getPagamentoVendaUseCase *usecase.GetPagamentoVendaUseCase,
-	updatePagamentoVendaUseCase *usecase.UpdatePagamentoVendaUseCase) *PagamentoVendaHandlers {
+// createPagamentoVendaUseCase *usecase.CreatePagamentoVendaUseCase,
+// listPagamentoVendaUseCase *usecase.ListPagamentoVendaUseCase,
+// deletePagamentoVendaUseCase *usecase.DeletePagamentoVendaUseCase,
+// getPagamentoVendaUseCase *usecase.GetPagamentoVendaUseCase,
+// updatePagamentoVendaUseCase *usecase.UpdatePagamentoVendaUseCase
+) *PagamentoVendaHandlers {
+
+	dbConn, _ := db.Conectar()
+	repositoryPagamentoVenda := repository.NewPagamentoVendaRepositoryMysql(dbConn)
+	createPagamentoVendaUseCase := usecase_pagamentovenda.NewCreatePagamentoVendaUseCase(repositoryPagamentoVenda)
+	listPagamentoVendaUseCase := usecase_pagamentovenda.NewListPagamentoVendaUseCase(repositoryPagamentoVenda)
+	getPagamentoVendaUseCase := usecase_pagamentovenda.NewGetPagamentoVendaUseCase(repositoryPagamentoVenda)
+	deletePagamentoVendaUseCase := usecase_pagamentovenda.NewDeletePagamentoVendaUseCase(repositoryPagamentoVenda)
+	updatePagamentoVendaUseCase := usecase_pagamentovenda.NewUpdatePagamentoVendaUseCase(repositoryPagamentoVenda)
+
 	return &PagamentoVendaHandlers{
 		CreatePagamentoVendaUseCase: createPagamentoVendaUseCase,
 		ListPagamentoVendaUseCase:   listPagamentoVendaUseCase,
@@ -35,8 +47,8 @@ func NewPagamentoVendaHandlers(
 func (p *PagamentoVendaHandlers) UpdatePagamentoVendaHandler(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	if id == "" {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
 	}
 	_, err := p.GetPagamentoVendaUseCase.GetPagamentoVendaByID(id)
 	if err != nil {
@@ -49,8 +61,9 @@ func (p *PagamentoVendaHandlers) UpdatePagamentoVendaHandler(w http.ResponseWrit
 	var input pagamentovendadto.PagamentoVendaInputDTO
 	err = json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
+		json.NewEncoder(w).Encode(err)
 	}
 	output, err := p.UpdatePagamentoVendaUseCase.Execute(id, input)
 	if err != nil {
@@ -66,8 +79,9 @@ func (p *PagamentoVendaHandlers) CreatePagamentoVendaHandler(w http.ResponseWrit
 	var input pagamentovendadto.PagamentoVendaInputDTO
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
+		json.NewEncoder(w).Encode(err)
 	}
 	output, err := p.CreatePagamentoVendaUseCase.Execute(input)
 	if err != nil {
@@ -95,8 +109,8 @@ func (p *PagamentoVendaHandlers) ListPagamentoVendaHandler(w http.ResponseWriter
 func (p *PagamentoVendaHandlers) DeletePagamentoVendaHandler(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	if id == "" {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
 	}
 	_, err := p.GetPagamentoVendaUseCase.GetPagamentoVendaByID(id)
 	if err != nil {
@@ -165,8 +179,9 @@ func (p *PagamentoVendaHandlers) GetPagamentoVendaHandler(w http.ResponseWriter,
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(output)
 	} else {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
+		json.NewEncoder(w).Encode("opção inválida")
 	}
 
 }

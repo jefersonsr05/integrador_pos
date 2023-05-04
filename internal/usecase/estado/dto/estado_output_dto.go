@@ -6,3 +6,7 @@ type EstadoOutputDTO struct {
 	UF        string `json:"uf"`
 	CodIbge   int32  `json:"codigo_ibge"`
 }
+
+type EstadosOutputDTO struct {
+	Estados EstadoOutputDTO `json:"estados"`
+}

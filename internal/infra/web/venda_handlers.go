@@ -6,24 +6,35 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
-	usecase "github.com/jefersonsr05/integrador_pos/internal/usecase/venda"
+	"github.com/jefersonsr05/integrador_pos/internal/infra/db"
+	"github.com/jefersonsr05/integrador_pos/internal/infra/repository"
+	usecase_venda "github.com/jefersonsr05/integrador_pos/internal/usecase/venda"
 	vendadto "github.com/jefersonsr05/integrador_pos/internal/usecase/venda/dto"
 )
 
 type VendaHandlers struct {
-	CreateVendaUseCase *usecase.CreateVendaUseCase
-	ListVendaUseCase   *usecase.ListVendaUseCase
-	DeleteVendaUseCase *usecase.DeleteVendaUseCase
-	GetVendaUseCase    *usecase.GetVendaUseCase
-	UpdateVendaUseCase *usecase.UpdateVendaUseCase
+	CreateVendaUseCase *usecase_venda.CreateVendaUseCase
+	ListVendaUseCase   *usecase_venda.ListVendaUseCase
+	DeleteVendaUseCase *usecase_venda.DeleteVendaUseCase
+	GetVendaUseCase    *usecase_venda.GetVendaUseCase
+	UpdateVendaUseCase *usecase_venda.UpdateVendaUseCase
 }
 
 func NewVendaHandlers(
-	createVendaUseCase *usecase.CreateVendaUseCase,
-	listVendaUseCase *usecase.ListVendaUseCase,
-	deleteVendaUseCase *usecase.DeleteVendaUseCase,
-	getVendaUseCase *usecase.GetVendaUseCase,
-	updateVendaUseCase *usecase.UpdateVendaUseCase) *VendaHandlers {
+// createVendaUseCase *usecase.CreateVendaUseCase,
+// listVendaUseCase *usecase.ListVendaUseCase,
+// deleteVendaUseCase *usecase.DeleteVendaUseCase,
+// getVendaUseCase *usecase.GetVendaUseCase,
+// updateVendaUseCase *usecase.UpdateVendaUseCase
+) *VendaHandlers {
+	dbConn, _ := db.Conectar()
+	repositoryVenda := repository.NewVendaRepositoryMysql(dbConn)
+	createVendaUseCase := usecase_venda.NewCreateVendaUseCase(repositoryVenda)
+	listVendaUseCase := usecase_venda.NewListVendaUseCase(repositoryVenda)
+	getVendaUseCase := usecase_venda.NewGetVendaUseCase(repositoryVenda)
+	deleteVendaUseCase := usecase_venda.NewDeleteVendaUseCase(repositoryVenda)
+	updateVendaUseCase := usecase_venda.NewUpdateVendaUseCase(repositoryVenda)
+
 	return &VendaHandlers{
 		CreateVendaUseCase: createVendaUseCase,
 		ListVendaUseCase:   listVendaUseCase,
@@ -35,8 +46,8 @@ func NewVendaHandlers(
 func (p *VendaHandlers) UpdateVendaHandler(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	if id == "" {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
 	}
 	_, err := p.GetVendaUseCase.GetVendaByID(id)
 	if err != nil {
@@ -49,8 +60,9 @@ func (p *VendaHandlers) UpdateVendaHandler(w http.ResponseWriter, r *http.Reques
 	var input vendadto.VendaInputDTO
 	err = json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
+		json.NewEncoder(w).Encode(err)
 	}
 	output, err := p.UpdateVendaUseCase.Execute(id, input)
 	if err != nil {
@@ -66,8 +78,9 @@ func (p *VendaHandlers) CreateVendaHandler(w http.ResponseWriter, r *http.Reques
 	var input vendadto.VendaInputDTO
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
+		json.NewEncoder(w).Encode(err)
 	}
 	output, err := p.CreateVendaUseCase.Execute(input)
 	if err != nil {
@@ -95,8 +108,8 @@ func (p *VendaHandlers) ListVendaHandler(w http.ResponseWriter, r *http.Request)
 func (p *VendaHandlers) DeleteVendaHandler(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	if id == "" {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
 	}
 	_, err := p.GetVendaUseCase.GetVendaByID(id)
 	if err != nil {
@@ -165,8 +178,9 @@ func (p *VendaHandlers) GetVendaHandler(w http.ResponseWriter, r *http.Request) 
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(output)
 	} else {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		return
+		json.NewEncoder(w).Encode("opção inválida")
 	}
 
 }

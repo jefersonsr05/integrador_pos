@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS `empresas` (
 CREATE TABLE IF NOT EXISTS `maquininhas_pos` (
     `id`                varchar(36)  NOT NULL PRIMARY KEY,
     `id_empresa`        varchar(36)  NOT NULL,
+    `descricao`         varchar(255),
     `administradora`    varchar(255),
     `cnpj`              varchar(14),
     FOREIGN KEY (`id_empresa`) REFERENCES `empresas`(`id`)

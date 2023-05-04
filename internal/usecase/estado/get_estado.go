@@ -40,15 +40,15 @@ func (u *GetEstadoUseCase) GetEstadoByUF(uf string) (*estadodto.EstadoOutputDTO,
 	}, nil
 }
 
-// func (u *GetEstadoUseCase) GetEstadoByIBGE(ibge string) (*estadodto.EstadoOutputDTO, error) {
-// 	estado, err := u.EstadoRepository.GetEstadoByIBGE(ibge)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return &estadodto.EstadoOutputDTO{
-// 		ID:        estado.ID,
-// 		Descricao: estado.Descricao,
-// 		UF:        estado.UF,
-// 		CodIbge:   estado.CodIbge,
-// 	}, nil
-// }
+func (u *GetEstadoUseCase) GetEstadoByCodIBGE(ibge int32) (*estadodto.EstadoOutputDTO, error) {
+	estado, err := u.EstadoRepository.GetEstadoByCodIBGE(ibge)
+	if err != nil {
+		return nil, err
+	}
+	return &estadodto.EstadoOutputDTO{
+		ID:        estado.ID,
+		Descricao: estado.Descricao,
+		UF:        estado.UF,
+		CodIbge:   estado.CodIbge,
+	}, nil
+}

@@ -4,29 +4,20 @@ import (
 	"log"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/jefersonsr05/integrador_pos/internal/infra/db"
-	"github.com/jefersonsr05/integrador_pos/internal/infra/repository"
 	"github.com/jefersonsr05/integrador_pos/internal/infra/web"
-	usecase_empresa "github.com/jefersonsr05/integrador_pos/internal/usecase/empresa"
 )
 
 func RouterEmpresa(r chi.Router) {
 
-	dbConn, _ := db.Conectar()
-
 	log.Printf("iniciando rotas de EMPRESA")
-	repositoryEmpresa := repository.NewEmpresaRepositoryMysql(dbConn)
-	createEmpresaUsecase := usecase_empresa.NewCreateEmpresaUseCase(repositoryEmpresa)
-	listEmpresasUsecase := usecase_empresa.NewListEmpresasUseCase(repositoryEmpresa)
-	getEmpresaUseCase := usecase_empresa.NewGetEmpresaUseCase(repositoryEmpresa)
-	deleteEmpresaUseCase := usecase_empresa.NewDeleteEmpresaUseCase(repositoryEmpresa)
-	updateEmpresaUseCase := usecase_empresa.NewUpdateEmpresaUseCase(repositoryEmpresa)
+
 	empresaHandlers := web.NewEmpresaHandlers(
-		createEmpresaUsecase,
-		listEmpresasUsecase,
-		deleteEmpresaUseCase,
-		getEmpresaUseCase,
-		updateEmpresaUseCase)
+	// createEmpresaUsecase,
+	// listEmpresasUsecase,
+	// deleteEmpresaUseCase,
+	// getEmpresaUseCase,
+	// updateEmpresaUseCase
+	)
 
 	// r := chi.NewRouter()
 	// r.Use() // some middleware..

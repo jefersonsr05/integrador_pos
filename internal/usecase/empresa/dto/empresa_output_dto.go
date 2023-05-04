@@ -6,3 +6,7 @@ type EmpresaOutputDTO struct {
 	Cnpj          string `json:"cnpj"`
 	ChaveRegistro string `json:"chave_registro"`
 }
+
+type EmpresasOutputDTO struct {
+	Empresas EmpresaOutputDTO `json:"empresas"`
+}

@@ -23,6 +23,7 @@ func (r *MaquininhaPosRepositoryMysql) Create(maquininhapos *entity.MaquininhaPo
 	err := queries.CreateMaquininhaPOS(ctx, database.CreateMaquininhaPOSParams{
 		ID:             maquininhapos.ID,
 		IDEmpresa:      maquininhapos.EmpresaID,
+		Descricao:      sql.NullString{String: maquininhapos.Descricao, Valid: true},
 		Administradora: sql.NullString{String: maquininhapos.Administradora, Valid: true},
 		Cnpj:           sql.NullString{String: maquininhapos.Cnpj, Valid: true},
 	})
@@ -49,6 +50,7 @@ func (r *MaquininhaPosRepositoryMysql) FindAll() ([]*entity.MaquininhaPos, error
 		var newMaquininha entity.MaquininhaPos
 		newMaquininha.ID = maquininha.ID
 		newMaquininha.EmpresaID = maquininha.IDEmpresa
+		newMaquininha.Descricao = maquininha.Descricao.String
 		newMaquininha.Administradora = maquininha.Administradora.String
 		newMaquininha.Cnpj = maquininha.Cnpj.String
 
@@ -72,6 +74,7 @@ func (r *MaquininhaPosRepositoryMysql) GetMaquininhasPosByEmpresa(empresaid stri
 		var newMaquininha entity.MaquininhaPos
 		newMaquininha.ID = maquininha.ID
 		newMaquininha.EmpresaID = maquininha.IDEmpresa
+		newMaquininha.Descricao = maquininha.Descricao.String
 		newMaquininha.Administradora = maquininha.Administradora.String
 		newMaquininha.Cnpj = maquininha.Cnpj.String
 
@@ -87,6 +90,7 @@ func (r *MaquininhaPosRepositoryMysql) Update(maquininhapos *entity.MaquininhaPo
 	err := queries.UpdateMaquininhaPOS(ctx, database.UpdateMaquininhaPOSParams{
 		ID:             maquininhapos.ID,
 		IDEmpresa:      maquininhapos.EmpresaID,
+		Descricao:      sql.NullString{String: maquininhapos.Descricao, Valid: true},
 		Administradora: sql.NullString{String: maquininhapos.Administradora, Valid: true},
 		Cnpj:           sql.NullString{String: maquininhapos.Cnpj, Valid: true},
 	})
@@ -113,6 +117,7 @@ func (r *MaquininhaPosRepositoryMysql) GetMaquininhasPOS(id string) (*entity.Maq
 	var newMaquininha entity.MaquininhaPos
 	newMaquininha.ID = maquininha.ID
 	newMaquininha.EmpresaID = maquininha.IDEmpresa
+	newMaquininha.Descricao = maquininha.Descricao.String
 	newMaquininha.Administradora = maquininha.Administradora.String
 	newMaquininha.Cnpj = maquininha.Cnpj.String
 

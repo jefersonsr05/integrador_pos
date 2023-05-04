@@ -36,6 +36,7 @@ func (r *CidadeRepositoryMysql) Create(cidade *entity.Cidade) error {
 
 func (r *CidadeRepositoryMysql) FindAll() ([]*entity.Cidade, error) {
 	ctx := context.Background()
+	// log.Printf(fmt.Sprint(r.DB.Stats().OpenConnections, r.DB.Stats().InUse, r.DB.Stats().Idle, r.DB.Stats().MaxOpenConnections))
 
 	queries := database.New(r.DB)
 
@@ -76,7 +77,7 @@ func (r *CidadeRepositoryMysql) Update(cidade *entity.Cidade) error {
 
 func (r *CidadeRepositoryMysql) GetCidadeByID(id string) (*entity.Cidade, error) {
 	ctx := context.Background()
-
+	// log.Printf(fmt.Sprint(r.DB.Stats().OpenConnections, r.DB.Stats().InUse, r.DB.Stats().Idle, r.DB.Stats().MaxOpenConnections))
 	queries := database.New(r.DB)
 
 	// log.Printf("passei aqui com o ID: " + id)
@@ -97,7 +98,7 @@ func (r *CidadeRepositoryMysql) GetCidadeByID(id string) (*entity.Cidade, error)
 
 func (r *CidadeRepositoryMysql) GetCidadeByIBGE(ibge string) (*entity.Cidade, error) {
 	ctx := context.Background()
-
+	// log.Printf(fmt.Sprint(r.DB.Stats().OpenConnections, r.DB.Stats().InUse, r.DB.Stats().Idle, r.DB.Stats().MaxOpenConnections))
 	queries := database.New(r.DB)
 
 	cidade, err := queries.GetCidadeByIBGE(ctx, ibge)
@@ -116,7 +117,7 @@ func (r *CidadeRepositoryMysql) GetCidadeByIBGE(ibge string) (*entity.Cidade, er
 
 func (r *CidadeRepositoryMysql) GetCidadeByUF(uf string) ([]*entity.Cidade, error) {
 	ctx := context.Background()
-
+	// log.Printf(fmt.Sprint(r.DB.Stats().OpenConnections, r.DB.Stats().InUse, r.DB.Stats().Idle, r.DB.Stats().MaxOpenConnections))
 	queries := database.New(r.DB)
 
 	listaCidade, err := queries.GetCidadeByUF(ctx, uf)
@@ -138,7 +139,7 @@ func (r *CidadeRepositoryMysql) GetCidadeByUF(uf string) ([]*entity.Cidade, erro
 
 func (r *CidadeRepositoryMysql) GetCidadeByIbgeUF(ibgeuf int32) ([]*entity.Cidade, error) {
 	ctx := context.Background()
-
+	// log.Printf(fmt.Sprint(r.DB.Stats().OpenConnections, r.DB.Stats().InUse, r.DB.Stats().Idle, r.DB.Stats().MaxOpenConnections))
 	queries := database.New(r.DB)
 
 	listaCidade, err := queries.GetCidadeByIbgeUF(ctx, ibgeuf)

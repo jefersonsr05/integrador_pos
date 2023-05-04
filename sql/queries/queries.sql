@@ -29,10 +29,10 @@ SELECT * FROM cidades WHERE id = ?;
 SELECT * FROM cidades WHERE cod_ibge = ?;
 
 -- name: GetCidadeByIbgeUF :many
-SELECT * FROM cidades LEFT JOIN ESTADOS ON cidades.estado_id = ESTADOS.id WHERE ESTADOS.cod_ibge = ?;
+SELECT * FROM cidades LEFT JOIN estados ON cidades.estado_id = estados.id WHERE estados.cod_ibge = ?;
 
 -- name: GetCidadeByUF :many
-SELECT * FROM cidades LEFT JOIN ESTADOS ON cidades.estado_id = ESTADOS.id WHERE ESTADOS.uf = ?;
+SELECT * FROM cidades LEFT JOIN estados ON cidades.estado_id = estados.id WHERE estados.uf = ?;
 
 -- name: ListCidades :many
 SELECT * FROM cidades;
@@ -151,14 +151,15 @@ SELECT * FROM maquininhas_pos WHERE id = ?;
 
 -- name: ListMaquininhaPOS :many
 SELECT * FROM maquininhas_pos;
+
 -- name: GetMaquininhasPosByEmpresa :many
 SELECT * FROM maquininhas_pos WHERE id_empresa = ?;
 
 -- name: CreateMaquininhaPOS :exec
-INSERT INTO maquininhas_pos (id, id_empresa, administradora, cnpj) VALUES (?, ?, ?, ?);
+INSERT INTO maquininhas_pos (id, id_empresa, descricao, administradora, cnpj) VALUES (?, ?, ?, ?, ?);
 
 -- name: UpdateMaquininhaPOS :exec
-UPDATE maquininhas_pos SET id_empresa=?, administradora=?, cnpj=? WHERE id=?;
+UPDATE maquininhas_pos SET id_empresa=?, descricao=?, administradora=?, cnpj=? WHERE id=?;
 
 -- name: DeleteMaquininhaPOS :exec
 DELETE FROM maquininhas_pos WHERE id = ?;
